@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_sisdb2025
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sisdb2025
+      MYSQL_USER: rootEspe
+      MYSQL_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+
+  springtaller:
+    image: springtaller
+    container_name: springboot_sisdb2025
+    depends_on:
+      - mysql
+    ports:
+      - "8002:8002"
+    networks:
+      - app_network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_sisdb2025:3306/sisdb2025
+      SPRING_DATASOURCE_USERNAME: rootEspe
+      SPRING_DATASOURCE_PASSWORD: root
+
+volumes:
+  mysql_data:
+
+networks:
+  app_network:
